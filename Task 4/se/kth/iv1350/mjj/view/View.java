@@ -28,11 +28,14 @@ public class View {
         System.out.println("Starting a new sale...");
 
         // Simulate adding products to the sale
-        saleController.scanProduct(1, 1); // Product ID 1, quantity 2
-        saleController.scanProduct(2, 1); // Product ID 2, quantity 1
-        saleController.scanProduct(3, 1); // Product ID 2, quantity 1
-        saleController.scanProduct(4, 1); // Product ID 2, quantity 1
-        saleController.scanProduct(5, 1); // Product ID 2, quantity 1
+        displayInput = saleController.scanProduct(1, 1); // Product ID 1, quantity 2
+        display.updateDisplay(displayInput.getCurrentProductDTO(), displayInput.getQuantity(), displayInput.getCost());
+        displayInput = saleController.scanProduct(2, 1); // Product ID 2, quantity 1
+        display.updateDisplay(displayInput.getCurrentProductDTO(), displayInput.getQuantity(), displayInput.getCost());
+        displayInput = saleController.scanProduct(3, 1); // Product ID 2, quantity 1
+        display.updateDisplay(displayInput.getCurrentProductDTO(), displayInput.getQuantity(), displayInput.getCost());
+        displayInput = saleController.scanProduct(4, 1); // Product ID 2, quantity 1
+        display.updateDisplay(displayInput.getCurrentProductDTO(), displayInput.getQuantity(), displayInput.getCost());
 
 
         double amountToPay = saleController.endSale();

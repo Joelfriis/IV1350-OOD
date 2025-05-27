@@ -2,6 +2,8 @@ package se.kth.iv1350.mjj.integration;
 
 import se.kth.iv1350.mjj.model.DTO.ProductDTO;
 import se.kth.iv1350.mjj.model.DTO.SaleDTO;
+import se.kth.iv1350.mjj.util.ItemNotFoundException;
+import se.kth.iv1350.mjj.util.DatabaseUnreachableException;
 
 public class ExternalInventorySystem {
 
@@ -17,11 +19,12 @@ public class ExternalInventorySystem {
 
     /**
      * A method for returning a product based on its ID.
+     * ID 100 simulates a database unreachable exception.
      * 
      * @param id The product ID of the wanted product.
      * @return A ProductDTO of the wanted product.
      */
-    public ProductDTO getProductInfo(int id) {
+    public ProductDTO getProductInfo(int id) throws ItemNotFoundException, DatabaseUnreachableException {
         switch (id) {
             case 1:
                 return item1;
@@ -31,8 +34,10 @@ public class ExternalInventorySystem {
                 return item3;
             case 4:
                 return item4;
+            case 100:
+                throw new DatabaseUnreachableException("Database unreachable");
             default:
-                return null;
+                throw new ItemNotFoundException(id);
         }
     }
 

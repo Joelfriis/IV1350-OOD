@@ -8,6 +8,8 @@ import se.kth.iv1350.mjj.model.CashRegister;
 import se.kth.iv1350.mjj.model.Sale;
 import se.kth.iv1350.mjj.model.DTO.ProductDTO;
 import se.kth.iv1350.mjj.model.DTO.SaleDTO;
+import se.kth.iv1350.mjj.util.ItemNotFoundException;
+import se.kth.iv1350.mjj.util.DatabaseUnreachableException;
 import se.kth.iv1350.mjj.util.DisplayInput;
 
 
@@ -17,6 +19,7 @@ public class SaleController {
     private ExternalAccountingSystem accountingSystem;
     //discount db
     private ReceiptPrinter receiptPrinter;
+    private Display display;
     private CashRegister cashRegister;
     private SaleDTO finalSaleDTO;
 
@@ -33,7 +36,6 @@ public class SaleController {
         this.accountingSystem = accountingSystem;
         this.inventorySystem = inventorySystem;
         this.receiptPrinter = receiptPrinter;
-        //this.display = display;
         this.cashRegister = new CashRegister();
     }
     
@@ -57,21 +59,22 @@ public class SaleController {
      * @param productID the ID of the product that is scanned
      * @param quantity the amount of the product that is scanned
      */
-    public DisplayInput scanProduct(int productID, int quantity) {
-        ProductDTO product = getProduct(productID);
-        DisplayInput displayInput = new DisplayInput(product, quantity, sale.getCost());
-        if(product != null) {
-            sale.addProduct(product, quantity);
-            //display.updateDisplay(product, quantity, sale.getCost());
-            return displayInput;
-        } 
+    public DisplayInput scanProduct(int productID, int quantity) throws ItemNotFoundException, DatabaseUnreachableException{
+        try {
+            ProductDTO product = inventorySystem.getProductInfo(productID);
+            DisplayInput displayInput = new DisplayInput(product, quantity, sale.getCost());
+            if(product != null) {
+                sale.addProduct(product, quantity);
+                return displayInput;
+            }
+        } catch (ItemNotFoundException e) {
+            throw e;
+        } catch (DatabaseUnreachableException e) {
+            throw e;
+        }
         return null;
     }
-
-    private ProductDTO getProduct(int productID){
-        
-        return inventorySystem.getProductInfo(productID);
-    }
+    
 
     /**
      * Ends the sale and returns the total amount to be paid.
